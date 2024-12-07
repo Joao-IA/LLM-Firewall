@@ -5,7 +5,7 @@ def ollama_generate(prompt):
     url = "http://localhost:11434/api/generate"
     
     data = {
-        "model": "llama3.1",  # Defina o modelo que você quer usar
+        "model": "llama3.1",  
         "prompt": prompt
     }
 
@@ -27,4 +27,4 @@ def ollama_generate(prompt):
         raise Exception(f"Failed to generate text: {response.text}")
 
 
-print(ollama_generate("Era uma vez um"))
+#print(ollama_generate("Era uma vez um"))
