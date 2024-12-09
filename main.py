@@ -2,7 +2,9 @@ import re
 from flask import Flask, request, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
 from ollama import ollama_generate
+import spacy
 
+nlp = spacy.load("en_core_web_sm")
 
 app = Flask(__name__)
 
@@ -12,9 +14,19 @@ USUARIOS = {
     "admin": generate_password_hash("senha123")
 }
 
+def mascarar_ner(texto):
+    doc = nlp(texto)
+    for ent in doc.ents:
+        if ent.label_ in ['PERSON', 'ORG']:
+            texto = texto.replace(ent.text, f"[{ent.label_}]")
+    return texto
+
+
 def mascarar_dados(texto):
     texto = re.sub(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', '[EMAIL]', texto)
     texto = re.sub(r'\b\d{3}[-.\s]??\d{2}[-.\s]??\d{4}\b', '[PHONE]', texto)
+    texto = re.sub(r'\b\d{3}\.\d{3}\.\d{3}-\d{2}\b', '[CPF]', texto)
+    texto = re.sub(r'\b\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}\b', '[CNPJ]', texto)
     return texto
 
 #pipeline llm
