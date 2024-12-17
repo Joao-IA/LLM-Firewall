@@ -2,7 +2,7 @@ import re
 from flask import Flask, request, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
 from ollama import ollama_generate
-
+from spacy_test import substituir_entidades
 
 app = Flask(__name__)
 
@@ -12,10 +12,12 @@ USUARIOS = {
     "admin": generate_password_hash("senha123")
 }
 
-def mascarar_dados(texto):
+'''def mascarar_dados(texto):
     texto = re.sub(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', '[EMAIL]', texto)
     texto = re.sub(r'\b\d{3}[-.\s]??\d{2}[-.\s]??\d{4}\b', '[PHONE]', texto)
-    return texto
+    return texto'''
+
+
 
 #pipeline llm
 # llm_pipe = pipeline()
@@ -32,7 +34,7 @@ def query_llm():
     input_usuario = request.json.get('input', '')
     
     #dlp
-    input_filtrado = mascarar_dados(input_usuario)
+    input_filtrado = substituir_entidades(input_usuario)
     
     #processamento do llm
     #llm_response = llm_pipe(input_filtrado, max_length=50)[0]['generated_text']
