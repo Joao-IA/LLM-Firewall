@@ -1,1 +1,3 @@
-/casb_dlp
+.env
+/llmfirewall
+/__pycache__
