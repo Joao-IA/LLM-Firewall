@@ -1,5 +1,6 @@
 from openai import OpenAI
 from dotenv import load_dotenv
+from logs_func import log_event
 import os
 import json
 
@@ -36,6 +37,7 @@ def is_prompt_safe(prompt):
     if is_safe_json == "safe":
         return True
     else:
+        log_event(f"In: {json_res['Safety Categories']}")
         return (False, json_res["Safety Categories"])
 
 
@@ -69,6 +71,7 @@ def is_output_safe(response:str):
     if is_safe_json == "safe":
         return True
     else:
+        log_event(f"Out: {json_res['Safety Categories']}")
         return (False, json_res["Safety Categories"])
 
 
